@@ -1,124 +1,66 @@
-# 🎧 ELEC5305 – Adaptive Hybrid Speech Denoising
+# ELEC5305 Project – Adaptive Hybrid Speech Denoising
+
 **Author:** Tengfei Wang (540542743)  
-**Course:** ELEC5305 – Speech and Audio Signal Processing  
-**University:** The University of Sydney  
+**Unit:** ELEC5305 – Audio Signal Processing, University of Sydney  
 
 ---
 
-## 📘 Project Overview
-This project implements **classical speech denoising techniques** using MATLAB.  
-It compares three traditional noise reduction methods and introduces a **custom adaptive hybrid approach**.
+## 1. Project Overview
 
-### Implemented Methods
-1. **Wiener Filter** – Statistical denoising minimizing mean square error.  
-2. **Spectral Subtraction** – Frequency-domain noise suppression via spectral magnitude estimation.  
-3. **Adaptive Hybrid Filter (Proposed)** – Combines Wiener and Spectral Subtraction filters using adaptive weighting to balance noise suppression and speech quality.
+This project implements and evaluates several **classical speech enhancement methods** in MATLAB and proposes an **adaptive hybrid denoiser** that combines their strengths.
 
-The project evaluates each method quantitatively (via SNR) and qualitatively (via waveform visualization).
+The goal is to reduce additive noise in real speech recordings (e.g. OSR open speech corpus) while preserving perceptual quality and intelligibility, using only traditional signal processing techniques (no deep learning, no pre-trained models).
 
----
+### Implemented methods
 
-## ⚙️ System Flow
+1. **Wiener filter**  
+   STFT-based Wiener filtering with noise power estimation from initial noise-dominated frames.
 
-```
+2. **Spectral subtraction**  
+   Classical magnitude-domain spectral subtraction with noise tracking and spectral flooring.
 
-Data Input → Noise Simulation → STFT Analysis → Wiener/Spectral/Hybrid Denoising → SNR Evaluation → Results Visualization
+3. **Proposed adaptive hybrid filter**  
+   A *noise-adaptive* combination of Wiener and spectral subtraction, where the time–frequency weighting is controlled by an estimated SNR and noise statistics.  
+   - At low SNR or strong noise, the filter leans towards Wiener behaviour.  
+   - At higher SNR or stable regions, it behaves more like spectral subtraction to better preserve speech harmonics.
 
----
-
-## 🧩 Repository Structure
-
-```
-
-📁 elec5305-project-TengfeiWang-540542743
-├── main_hybrid_denoise.m           # Main script for running the full pipeline
-├── generate_synthetic_speech.m     # Synthetic speech generator (for testing)
-├── add_noise_simulation.m          # Adds artificial noise (white/babble)
-├── wiener_filter_basic.m           # Classical Wiener filter
-├── spectral_subtraction_basic.m    # Frequency-domain spectral subtraction
-├── adaptive_hybrid_filter.m        # Hybrid denoising algorithm (custom)
-├── evaluate_snr.m                  # Signal-to-Noise Ratio evaluation
-├── plot_results.m                  # Visualization of waveforms
-├── generate_demo_video.m           # Automatically creates demo video
-├── data/                           # Input audio files (optional)
-└── results/                        # Denoised outputs and visual results
-
-````
+All implementations are **pure MATLAB code** without requiring additional toolboxes.
 
 ---
 
-##  How to Run
+## 2. File Structure
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/TengfeiWang5305/elec5305-project-TengfeiWang-540542743.git
-   cd elec5305-project-TengfeiWang-540542743
-````
+```text
+elec5305-project-TengfeiWang-540542743/
+  data/                      # input clean speech files (e.g. OSR_us_000_0031_8k.wav)
+  results/                   # demo outputs, figures, audio, experiment CSV
+  examples/
+    osr_0031/                # fixed example for GitHub (see Section 5)
+      input_OSR_us_000_0031_8k.wav
+      noisy.wav
+      wiener.wav
+      spectral.wav
+      hybrid.wav
+      comparison_waveforms.png
 
-2. Open MATLAB and execute:
+  % core processing
+  generate_synthetic_speech.m
+  add_noise_simulation.m
+  add_noise_with_snr.m
+  wiener_filter_basic.m
+  spectral_subtraction_basic.m
+  adaptive_hybrid_filter.m
+  evaluate_snr.m
+  plot_results.m
+  generate_demo_video.m
+  main_hybrid_denoise.m
 
-   ```matlab
-   main_hybrid_denoise
-   ```
+  % experiments & utilities
+  run_batch_experiments.m
+  plot_experiment_results.m
+  play_audio_demo.m
 
-3. The script will:
-
-   * Auto-generate synthetic speech (or load from `/data/input.wav` if available)
-   * Simulate environmental noise
-   * Apply Wiener, Spectral, and Hybrid denoising
-   * Evaluate SNR improvement
-   * Plot results and save all outputs to `/results`
-
----
-
-##  Visualization Results
-###  Example Output (Waveforms)
-
-
-| Signal Type         | Description                        |
-| ------------------- | ---------------------------------- |
-| **Clean Speech**    | Original synthetic or loaded audio |
-| **Noisy Speech**    | With simulated white/babble noise  |
-| **Wiener Denoised** | Classical filter output            |
-| **Hybrid Denoised** | Proposed adaptive combination      |
-
-### 📊 Example SNR Results
-
-```
-Noisy:    2.91 dB  
-Wiener:   2.65 dB  
-Spectral: 2.63 dB  
-Hybrid:   2.63 dB
-```
-
----
-
-## 📽️ Demo Video
-
-🎥 A short demonstration video showing input vs denoised speech is automatically generated at:
-
-```
-results/demo_denoising.mp4
-```
-
-You can embed or upload this file for a visual demonstration in your presentation.
-
----
-
-## 🧠 Key Insights
-
-* The **Hybrid Filter** dynamically adjusts weights between Wiener and Spectral Subtraction outputs.
-* It achieves **better balance** between noise suppression and speech clarity than individual methods.
-* Effective in moderate-noise scenarios where spectral distortion is significant.
-
----
-
-## 🔧 Requirements
-
-* **MATLAB R2023b** or later
-* *(Optional)* Signal Processing Toolbox
-
----
+  README.md
 
 
 
