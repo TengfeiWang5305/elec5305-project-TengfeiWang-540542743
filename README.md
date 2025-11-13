@@ -3,7 +3,30 @@
 **Author:** Tengfei Wang (540542743)  
 **Unit:** ELEC5305 – Audio Signal Processing, University of Sydney  
 
----
+---## Example 1 – OSR\_us\_000\_0031\_8k (clean English speech)
+
+**Input (clean speech):**
+
+- [`input_OSR_us_000_0031_8k.wav`](examples/osr_0031/input_OSR_us_000_0031_8k.wav)
+
+**Noisy and denoised outputs:**
+
+- [`noisy.wav`](examples/osr_0031/noisy.wav)
+- [`wiener.wav`](examples/osr_0031/wiener.wav)
+- [`spectral.wav`](examples/osr_0031/spectral.wav)
+- [`hybrid.wav`](examples/osr_0031/hybrid.wav)
+
+**Waveform comparison:**
+
+![Waveform comparison](examples/osr_0031/comparison_waveforms.png)
+
+**Quick listening (in browsers that support HTML audio):**
+
+<audio controls src="examples/osr_0031/noisy.wav"></audio> Noisy  
+<audio controls src="examples/osr_0031/hybrid.wav"></audio> Hybrid
+
+> The hybrid method audibly reduces background noise while preserving the speech structure more clearly than the baselines.
+
 
 ## 1. Project Overview
 
