@@ -2,582 +2,720 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Adaptive Hybrid Speech Denoising – Interactive Demo</title>
+  <title>Interactive Speech Enhancement Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #111827;
-      --card-soft: #020617;
+      --bg: #020617;
+      --bg-soft: #030712;
+      --card: #020617;
+      --card-alt: #020617;
       --accent: #38bdf8;
-      --accent-soft: #0ea5e9;
-      --text: #e5e7eb;
-      --text-soft: #9ca3af;
+      --accent-soft: rgba(56,189,248,0.16);
+      --accent-strong: #0ea5e9;
       --border: #1f2937;
+      --border-soft: #0f172a;
+      --text-main: #e5e7eb;
+      --text-soft: #9ca3af;
+      --chip-bg: rgba(15,23,42,0.98);
+      --shadow-strong: 0 24px 60px rgba(0,0,0,0.85);
+      --shadow-soft: 0 16px 40px rgba(15,23,42,0.9);
     }
-    * { box-sizing: border-box; }
-    body {
+
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
-      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
-      color: var(--text);
     }
-    a { color: var(--accent-soft); text-decoration: none; }
-    a:hover { text-decoration: underline; }
 
-    .page {
-      max-width: 1100px;
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, #1e293b 0, #020617 36%, #000 100%);
+      color: var(--text-main);
+      padding: 28px 16px 40px 16px;
+    }
+
+    main {
+      max-width: 1240px;
       margin: 0 auto;
-      padding: 32px 16px 48px;
     }
-    .header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-    .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(56,189,248,0.12);
-      border: 1px solid rgba(56,189,248,0.4);
-      font-size: 12px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
+
     h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
-      letter-spacing: .03em;
+      font-size: 32px;
+      letter-spacing: 0.05em;
+      text-align: center;
+      margin-bottom: 6px;
     }
-    .subtitle {
-      margin: 0;
+
+    .subtitle-main {
+      text-align: center;
       font-size: 14px;
       color: var(--text-soft);
+      margin-bottom: 26px;
     }
 
-    .grid {
-      display: grid;
-      gap: 20px;
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 26px;
     }
-    @media (min-width: 900px) {
-      .grid-2 {
-        grid-template-columns: 2fr 1.5fr;
-      }
-      .grid-3 {
-        grid-template-columns: repeat(3, 1fr);
+
+    .chip {
+      border-radius: 999px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid rgba(148,163,184,0.4);
+      padding: 4px 12px;
+      font-size: 11px;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chip-flag {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.15);
+    }
+
+    .chip strong {
+      color: var(--text-main);
+    }
+
+    .grid-main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.4fr);
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    @media (max-width: 940px) {
+      .grid-main {
+        grid-template-columns: 1fr;
       }
     }
 
     .card {
-      background: radial-gradient(circle at top left, #1f2937 0, #020617 65%);
-      border-radius: 16px;
+      background: radial-gradient(circle at top left, #020617 0, #020617 55%, #020617 100%);
+      border-radius: 20px;
       border: 1px solid var(--border);
-      padding: 18px 18px 16px;
-      box-shadow: 0 18px 40px rgba(0,0,0,.6);
+      box-shadow: var(--shadow-strong);
+      padding: 18px 20px 20px 20px;
     }
-    .card-header {
+
+    .card-alt {
+      background: radial-gradient(circle at top left, #020617 0, #020617 70%, #020617 100%);
+      border-radius: 20px;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 20px 20px 20px;
+    }
+
+    .header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 12px;
       margin-bottom: 8px;
     }
-    .card-title {
-      font-size: 16px;
-      font-weight: 600;
-    }
-    .card-tag {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      color: var(--text-soft);
-    }
-    .card-body {
-      font-size: 13px;
-      color: var(--text-soft);
-    }
 
-    .section-title {
+    .title-main {
       font-size: 18px;
-      font-weight: 600;
-      margin: 28px 0 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      letter-spacing: 0.03em;
     }
-    .section-title span {
-      font-size: 14px;
-      font-weight: 400;
+
+    .tag-soft {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.45);
+      background: rgba(15,23,42,0.9);
+      padding: 4px 10px;
+      white-space: nowrap;
+    }
+
+    p {
+      font-size: 13px;
+      line-height: 1.55;
       color: var(--text-soft);
     }
 
-    .audio-grid {
-      display: grid;
-      gap: 10px;
-    }
-    @media (min-width: 700px) {
-      .audio-grid {
-        grid-template-columns: repeat(2, minmax(0,1fr));
-      }
-    }
-    .audio-item label {
-      display: block;
+    .label {
       font-size: 12px;
       color: var(--text-soft);
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
+
+    .row-two {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .audio-strip {
+      background: rgba(15,23,42,0.96);
+      border-radius: 999px;
+      border: 1px solid rgba(30,64,175,0.55);
+      padding: 6px 10px 6px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .audio-strip h3 {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
     audio {
       width: 100%;
     }
 
-    .img-wrap {
-      margin-top: 10px;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      background: var(--card-soft);
-    }
-    .img-wrap img {
-      width: 100%;
-      display: block;
-    }
-    .img-caption {
-      font-size: 11px;
-      color: var(--text-soft);
-      padding: 6px 10px 8px;
-      border-top: 1px solid var(--border);
-      background: rgba(15,23,42,0.9);
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(30,64,175,0.9), transparent);
+      margin: 14px 0 10px 0;
     }
 
-    .control-row {
+    .image-block {
+      margin-top: 8px;
+    }
+
+    .image-caption {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+
+    .image-row {
+      display: grid;
+      grid-template-columns: minmax(0,1fr);
+      gap: 8px;
+    }
+
+    .image-row img,
+    .image-block img {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(30,64,175,0.6);
+      background: #020617;
+    }
+
+    .snr-img {
+      margin-top: 8px;
+    }
+
+    .snr-img img {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(30,64,175,0.6);
+      background: #020617;
+    }
+
+    .snr-caption {
+      font-size: 11px;
+      margin-top: 4px;
+      color: var(--text-soft);
+    }
+
+    /* Playground */
+
+    .section-heading {
+      font-size: 18px;
+      margin-bottom: 6px;
+      letter-spacing: 0.03em;
+    }
+
+    .playground-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.2fr);
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .playground-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field {
+      margin-bottom: 10px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 2px;
+      color: var(--text-soft);
+    }
+
+    input[type="file"] {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .btn-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 10px;
-      align-items: center;
-    }
-    .control {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 12px;
-      color: var(--text-soft);
-    }
-    .control input[type="file"] {
-      font-size: 12px;
-    }
-    select, input[type="range"], input[type="number"] {
-      background: #020617;
-      color: var(--text);
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      font-size: 12px;
-    }
-    input[type="range"] {
-      width: 140px;
-      padding: 0;
-    }
-    .btn {
-      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
-      border-radius: 999px;
-      border: none;
-      padding: 7px 16px;
-      font-size: 12px;
-      font-weight: 500;
-      color: #0b1120;
-      cursor: pointer;
-      box-shadow: 0 12px 25px rgba(56,189,248,0.4);
-    }
-    .btn:disabled {
-      opacity: .55;
-      cursor: default;
-      box-shadow: none;
+      gap: 8px;
+      margin-top: 6px;
     }
 
-    .pill {
-      font-size: 11px;
-      padding: 3px 8px;
+    button {
       border-radius: 999px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(148,163,184,0.45);
+      background: rgba(15,23,42,0.98);
+      color: var(--text-main);
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      color: var(--text-soft);
     }
-    .pill-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: var(--accent-soft);
+
+    button.primary {
+      background: radial-gradient(circle at top left, var(--accent) 0, #1d4ed8 45%, #020617 100%);
+      border-color: rgba(56,189,248,0.9);
+      color: #020617;
+      font-weight: 600;
     }
-    .small {
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+    }
+
+    #snrValue {
+      width: 40px;
+      font-size: 12px;
+      text-align: right;
+      color: var(--text-main);
+    }
+
+    .status {
       font-size: 11px;
       color: var(--text-soft);
+      margin-top: 4px;
+      min-height: 16px;
+    }
+
+    .status span.ok { color: #22c55e; }
+    .status span.warn { color: #eab308; }
+    .status span.err { color: #f97373; }
+
+    .code-badge {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      background: rgba(15,23,42,0.96);
+      border-radius: 999px;
+      padding: 2px 8px;
+      border: 1px solid rgba(148,163,184,0.4);
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-note {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 6px;
+    }
+
+    a {
+      color: var(--accent-strong);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <header class="header">
-      <div class="badge">ELEC5305 · Adaptive Hybrid Speech Denoising</div>
-      <h1>Interactive Speech Enhancement Demo</h1>
-      <p class="subtitle">
-        Real speech, classical denoisers, and a browser-based noise playground.
-      </p>
-    </header>
-
-    <!-- ====== TOP GRID: LEFT (EXAMPLE), RIGHT (METRICS) ====== -->
-    <section class="grid grid-2">
-      <!-- Fixed example card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Fixed Example · OSR_us_000_0031_8k</div>
-          <div class="card-tag">Clean vs Noisy vs Denoised</div>
-        </div>
-        <div class="card-body">
-          <p>
-            A real English sentence from the Open Speech Repository is mixed
-            with noise and enhanced by three classical methods implemented in MATLAB.
-          </p>
-
-          <div class="audio-grid" style="margin-top:10px;">
-            <div class="audio-item">
-              <label>Clean speech</label>
-              <audio controls src="../examples/osr_0031/input_OSR_us_000_0031_8k.wav"></audio>
-            </div>
-            <div class="audio-item">
-              <label>Noisy mixture</label>
-              <audio controls src="../examples/osr_0031/noisy.wav"></audio>
-            </div>
-            <div class="audio-item">
-              <label>Wiener denoised</label>
-              <audio controls src="../examples/osr_0031/wiener.wav"></audio>
-            </div>
-            <div class="audio-item">
-              <label>Spectral subtraction denoised</label>
-              <audio controls src="../examples/osr_0031/spectral.wav"></audio>
-            </div>
-            <div class="audio-item" style="grid-column:1/-1;">
-              <label>Adaptive hybrid denoised</label>
-              <audio controls src="../examples/osr_0031/hybrid.wav"></audio>
-            </div>
-          </div>
-
-          <div class="img-wrap" style="margin-top:12px;">
-            <img src="../results/comparison_waveforms.png" alt="Waveform comparison" />
-            <div class="img-caption">
-              Waveform comparison for OSR_us_000_0031_8k:
-              clean, noisy, Wiener, spectral subtraction and adaptive hybrid.
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Experiment metrics card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Batch Experiments · SNR Improvement</div>
-          <div class="card-tag">Whitehum · Highfreq · Babble</div>
-        </div>
-        <div class="card-body">
-          <p>
-            The denoisers are systematically evaluated across multiple speech
-            files, noise types and input SNR levels (0 / 5 / 10 / 15 dB).
-          </p>
-          <p class="small" style="margin-top:4px;">
-            Figures below are generated from <code>experiment_results.csv</code>
-            using <code>plot_experiment_results.m</code>.
-          </p>
-
-          <div class="img-wrap" style="margin-top:10px;">
-            <img src="../results/exp_whitehum_snr_improvement.png"
-                 alt="SNR improvement - whitehum" />
-            <div class="img-caption">
-              Average SNR improvement vs input SNR for white + 50 Hz hum noise.
-            </div>
-          </div>
-
-          <div class="img-wrap" style="margin-top:10px;">
-            <img src="../results/exp_highfreq_snr_improvement.png"
-                 alt="SNR improvement - highfreq" />
-            <div class="img-caption">
-              SNR improvement for high-frequency noise (spectral hiss).
-            </div>
-          </div>
-
-          <div class="img-wrap" style="margin-top:10px;">
-            <img src="../results/exp_babble_snr_improvement.png"
-                 alt="SNR improvement - babble" />
-            <div class="img-caption">
-              SNR improvement for multi-speaker babble noise.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ====== TRY YOUR OWN FILE ====== -->
-    <h2 class="section-title" style="margin-top:32px;">
-      Try Your Own File
-      <span>(browser-side noise injection · original MATLAB denoising in repo)</span>
-    </h2>
-
-    <section class="card">
-      <div class="card-header">
-        <div class="card-title">Noise playground (Web Audio API)</div>
-        <div class="pill">
-          <div class="pill-dot"></div>
-          client-side · no upload to server
-        </div>
-      </div>
-      <div class="card-body">
-        <p>
-          Upload a short WAV file, choose a noise type and a target SNR, and
-          generate a noisy version directly in your browser. This demonstrates
-          the same SNR control used in the MATLAB experiments.
-        </p>
-
-        <div class="control-row" style="margin-top:12px;">
-          <div class="control" style="flex:1 1 200px;">
-            <label for="fileInput">1. Upload clean speech (mono WAV recommended)</label>
-            <input type="file" id="fileInput" accept=".wav,audio/wav" />
-          </div>
-
-          <div class="control">
-            <label for="noiseType">2. Noise type</label>
-            <select id="noiseType">
-              <option value="white">White + hum</option>
-              <option value="highfreq">High-frequency hiss</option>
-              <option value="babble">Babble-like (clustered bursts)</option>
-            </select>
-          </div>
-
-          <div class="control">
-            <label for="snrRange">3. Target SNR (dB)</label>
-            <div style="display:flex;align-items:center;gap:6px;">
-              <input type="range" id="snrRange" min="0" max="20" step="1" value="5" />
-              <input type="number" id="snrValue" min="0" max="20" step="1" value="5"
-                     style="width:50px;text-align:center;" />
-            </div>
-          </div>
-
-          <div class="control">
-            <label>&nbsp;</label>
-            <button class="btn" id="processBtn" disabled>Generate noisy version</button>
-          </div>
-        </div>
-
-        <div class="audio-grid" style="margin-top:12px;">
-          <div class="audio-item">
-            <label>Clean (uploaded)</label>
-            <audio id="playerClean" controls></audio>
-          </div>
-          <div class="audio-item">
-            <label>Noisy (browser-generated)</label>
-            <audio id="playerNoisy" controls></audio>
-          </div>
-        </div>
-
-        <p class="small" style="margin-top:10px;">
-          Download noisy WAV:
-          <a id="downloadLink" href="#" download="noisy_browser.wav" style="display:none;">
-            noisy_browser.wav
-          </a>
-        </p>
-
-        <p class="small" style="margin-top:6px;">
-          The full Wiener, spectral subtraction and adaptive hybrid denoising
-          pipelines are implemented in MATLAB in this repository
-          (<code>main_hybrid_denoise.m</code>, <code>run_batch_experiments.m</code>).
-        </p>
-      </div>
-    </section>
-
-    <p class="small" style="margin-top:18px;text-align:center;color:#6b7280;">
-      Source code: <code>elec5305-project-TengfeiWang-540542743</code> ·
-      MATLAB implementation by Tengfei Wang (540542743).
+<main>
+  <header>
+    <h1>Interactive Speech Enhancement Demo</h1>
+    <p class="subtitle-main">
+      Real speech, classical denoisers evaluated in MATLAB, and a browser-based noise playground.
     </p>
-  </div>
+    <div class="chips-row">
+      <div class="chip">
+        <span class="chip-flag"></span>
+        <strong>ELEC5305</strong> Adaptive Hybrid Speech Denoising
+      </div>
+      <div class="chip">
+        <strong>Baselines:</strong> Wiener · Spectral subtraction
+      </div>
+      <div class="chip">
+        <strong>Hybrid:</strong> SNR-adaptive combination
+      </div>
+      <div class="chip">
+        <strong>Metrics:</strong> SNR improvement (dB)
+      </div>
+    </div>
+  </header>
 
-  <script>
-    // ====== SNR slider <-> number sync ======
-    const snrRange = document.getElementById('snrRange');
-    const snrValue = document.getElementById('snrValue');
-    snrRange.addEventListener('input', () => { snrValue.value = snrRange.value; });
-    snrValue.addEventListener('input', () => { snrRange.value = snrValue.value; });
+  <!-- TOP GRID: FIXED EXAMPLE + BATCH EXPERIMENTS -->
+  <section class="grid-main">
+    <!-- LEFT: FIXED EXAMPLE -->
+    <article class="card">
+      <div class="header-row">
+        <h2 class="title-main">Fixed Example · OSR_us_000_0031_8k</h2>
+        <span class="tag-soft">Clean vs Noisy vs Denoised</span>
+      </div>
+      <p>
+        A real English sentence from the Open Speech Repository is mixed with synthetic noise and
+        enhanced by three classical methods implemented in MATLAB.
+      </p>
 
-    // ====== Web Audio noise playground ======
-    const fileInput   = document.getElementById('fileInput');
-    const noiseType   = document.getElementById('noiseType');
-    const processBtn  = document.getElementById('processBtn');
-    const playerClean = document.getElementById('playerClean');
-    const playerNoisy = document.getElementById('playerNoisy');
-    const downloadLink= document.getElementById('downloadLink');
+      <div class="row-two" style="margin-top:12px;">
+        <div class="audio-strip">
+          <h3>Clean speech</h3>
+          <audio controls src="../examples/osr_0031/OSR_us_000_0031_8k.wav"></audio>
+        </div>
+        <div class="audio-strip">
+          <h3>Noisy mixture</h3>
+          <audio controls src="../results/noisy.wav"></audio>
+        </div>
+      </div>
 
-    let cleanArrayBuffer = null;
+      <div class="row-two" style="margin-top:10px;">
+        <div class="audio-strip">
+          <h3>Wiener denoised</h3>
+          <audio controls src="../results/wiener_denoised.wav"></audio>
+        </div>
+        <div class="audio-strip">
+          <h3>Spectral subtraction denoised</h3>
+          <audio controls src="../results/spectral_denoised.wav"></audio>
+        </div>
+      </div>
 
-    fileInput.addEventListener('change', () => {
-      const file = fileInput.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        cleanArrayBuffer = e.target.result;
-        playerClean.src = URL.createObjectURL(file);
-        processBtn.disabled = false;
-      };
-      reader.readAsArrayBuffer(file);
+      <div class="audio-strip" style="margin-top:10px;">
+        <h3>Adaptive hybrid denoised</h3>
+        <audio controls src="../results/hybrid_denoised.wav"></audio>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="image-block">
+        <div class="label">Waveform comparison</div>
+        <div class="image-row">
+          <img src="../results/comparison_waveforms.png"
+               alt="Waveform comparison for clean, noisy, Wiener, spectral subtraction and hybrid speech." />
+        </div>
+        <p class="image-caption">
+          Waveform comparison for OSR_us_000_0031_8k: clean, noisy, Wiener, spectral subtraction and
+          adaptive hybrid outputs.
+        </p>
+      </div>
+    </article>
+
+    <!-- RIGHT: BATCH EXPERIMENTS -->
+    <article class="card-alt">
+      <div class="header-row">
+        <h2 class="title-main">Batch Experiments · SNR Improvement</h2>
+        <span class="tag-soft">Whitehum · Highfreq · Babble</span>
+      </div>
+      <p>
+        The denoisers are evaluated systematically across multiple speech files, noise types and input
+        SNR levels (0 / 5 / 10 / 15 dB). Each bar shows the average SNR improvement over the noisy
+        reference.
+      </p>
+
+      <div class="snr-img">
+        <img src="../results/exp_whitehum_snr_improvement.png"
+             alt="SNR improvement for white + 50 Hz hum noise." />
+        <p class="snr-caption">
+          SNR improvement vs input SNR for <strong>white + 50&nbsp;Hz hum noise</strong>. Spectral subtraction
+          achieves the largest gain at low SNR, while the hybrid method remains conservative to avoid
+          speech distortion.
+        </p>
+      </div>
+
+      <div class="snr-img">
+        <img src="../results/exp_highfreq_snr_improvement.png"
+             alt="SNR improvement for high-frequency noise." />
+        <p class="snr-caption">
+          SNR improvement for <strong>high-frequency noise</strong>. Wiener filtering is strong in this regime,
+          reflecting its ability to track stationary residual hiss.
+        </p>
+      </div>
+
+      <div class="snr-img">
+        <img src="../results/exp_babble_snr_improvement.png"
+             alt="SNR improvement for babble noise." />
+        <p class="snr-caption">
+          SNR improvement for <strong>multi-speaker babble noise</strong>. All methods offer moderate gain; the
+          hybrid filter tends to preserve more speech detail at the cost of smaller SNR improvement.
+        </p>
+      </div>
+
+      <p class="footer-note">
+        All figures are generated in MATLAB using <span class="code-badge">run_batch_experiments.m</span>
+        and <span class="code-badge">plot_experiment_results.m</span>, and exported as static PNG files.
+      </p>
+    </article>
+  </section>
+
+  <!-- PLAYGROUND -->
+  <section class="card" style="margin-top:20px;">
+    <h2 class="section-heading">Browser Noise Playground (Client-Side Only)</h2>
+    <p>
+      The full denoising algorithms run offline in MATLAB. This lightweight playground is implemented
+      purely in JavaScript using the Web Audio API: you can upload a clean speech file, add synthetic
+      noise at a chosen input SNR, and listen to the resulting noisy mixture. No data ever leaves your
+      browser.
+    </p>
+
+    <div class="playground-grid">
+      <!-- controls -->
+      <div>
+        <div class="field" style="margin-top:12px;">
+          <label for="fileInput">1. Upload a WAV file (mono recommended)</label>
+          <input id="fileInput" type="file"
+                 accept="audio/wav,audio/wave,audio/x-wav,audio/*" />
+        </div>
+
+        <div class="field">
+          <label>2. Choose noise type</label>
+          <div class="btn-row">
+            <button type="button" class="noise-btn primary" data-noise="white">White</button>
+            <button type="button" class="noise-btn" data-noise="babble">Babble-like</button>
+            <button type="button" class="noise-btn" data-noise="highfreq">High-frequency</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>3. Set input SNR (dB)</label>
+          <div class="slider-row">
+            <input id="snrSlider" type="range" min="-5" max="20" step="1" value="5" />
+            <span id="snrValue">5 dB</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>4. Playback</label>
+          <div class="btn-row">
+            <button id="playCleanBtn" type="button" disabled>▶ Play clean</button>
+            <button id="playNoisyBtn" type="button" class="primary" disabled>▶ Play noisy mixture</button>
+            <button id="stopBtn" type="button" disabled>■ Stop</button>
+          </div>
+        </div>
+
+        <div id="statusLine" class="status">
+          <span class="warn">Upload a WAV file to start the playground.</span>
+        </div>
+      </div>
+
+      <!-- explanation -->
+      <div>
+        <p class="label">How it works</p>
+        <p>
+          When you click <strong>Play noisy mixture</strong>, the browser generates white / babble-like /
+          high-frequency noise with the same length as the uploaded signal. The noise amplitude is scaled
+          such that the power ratio between clean and noise approximates the requested input SNR.
+        </p>
+        <p style="margin-top:8px;">
+          This interactive panel is designed to complement the MATLAB experiments:
+        </p>
+        <ul style="margin-top:6px; margin-left:18px; font-size:13px; color:var(--text-soft); line-height:1.5;">
+          <li>It illustrates perceptual differences between noise types.</li>
+          <li>It shows how increasing the input SNR makes the speech more intelligible even before denoising.</li>
+          <li>It allows non-MATLAB users to explore the task without installing toolboxes.</li>
+        </ul>
+        <p class="footer-note">
+          Note: This playground performs <em>noise synthesis only</em>. All denoised examples and evaluation
+          plots on this page are generated offline using the MATLAB code in this repository.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <section class="card-alt" style="margin-top:18px;">
+    <div class="header-row" style="margin-bottom:4px;">
+      <h2 class="title-main">Project Repository</h2>
+      <span class="tag-soft">GitHub</span>
+    </div>
+    <p>
+      Full MATLAB implementation, experiment scripts and the written report are available at:
+      <a href="https://github.com/TengfeiWang5305/elec5305-project-TengfeiWang-540542743" target="_blank">
+        github.com/TengfeiWang5305/elec5305-project-TengfeiWang-540542743
+      </a>.
+    </p>
+  </section>
+</main>
+
+<script>
+  // --- Simple Web Audio playground (client-side only) ---
+  let audioCtx = null;
+  let cleanBuffer = null;
+  let currentNoiseType = "white";
+  let currentNodes = [];
+
+  const fileInput = document.getElementById("fileInput");
+  const snrSlider = document.getElementById("snrSlider");
+  const snrValue = document.getElementById("snrValue");
+  const playCleanBtn = document.getElementById("playCleanBtn");
+  const playNoisyBtn = document.getElementById("playNoisyBtn");
+  const stopBtn = document.getElementById("stopBtn");
+  const statusLine = document.getElementById("statusLine");
+  const noiseBtns = document.querySelectorAll(".noise-btn");
+
+  function setStatus(html, cls) {
+    statusLine.innerHTML = `<span class="${cls}">${html}</span>`;
+  }
+
+  snrSlider.addEventListener("input", () => {
+    snrValue.textContent = `${snrSlider.value} dB`;
+  });
+
+  // choose noise type
+  noiseBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      noiseBtns.forEach(b => b.classList.remove("primary"));
+      btn.classList.add("primary");
+      currentNoiseType = btn.dataset.noise;
+      setStatus(`Noise type set to ${currentNoiseType}.`, "ok");
     });
+  });
 
-    processBtn.addEventListener('click', async () => {
-      if (!cleanArrayBuffer) return;
+  // upload & decode
+  fileInput.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-      processBtn.disabled = true;
-      processBtn.textContent = 'Processing...';
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const arrayBuf = await file.arrayBuffer();
+      cleanBuffer = await audioCtx.decodeAudioData(arrayBuf);
 
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      const audioCtx = new AudioContext();
-      const buffer = await audioCtx.decodeAudioData(cleanArrayBuffer.slice(0));
+      playCleanBtn.disabled = false;
+      playNoisyBtn.disabled = false;
+      stopBtn.disabled = false;
 
-      const noisyBuffer = audioCtx.createBuffer(
-        buffer.numberOfChannels,
-        buffer.length,
-        buffer.sampleRate
+      setStatus(
+        `Loaded file: ${file.name}. Channels: ${cleanBuffer.numberOfChannels}, duration: ${cleanBuffer.duration.toFixed(2)} s.`,
+        "ok"
       );
-
-      const snrTargetDb = parseFloat(snrRange.value);
-      const snrTargetLin = Math.pow(10, snrTargetDb / 10);
-
-      for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
-        const clean = buffer.getChannelData(ch);
-        const noisy = noisyBuffer.getChannelData(ch);
-
-        // clean power estimate
-        let pClean = 0;
-        for (let i = 0; i < clean.length; i++) pClean += clean[i] * clean[i];
-        pClean /= clean.length;
-
-        // generate different noise types
-        const noiseTemp = new Float32Array(clean.length);
-        let pNoise = 0;
-
-        const type = noiseType.value;
-        if (type === 'white') {
-          // white + low-frequency hum
-          for (let i = 0; i < clean.length; i++) {
-            const white = Math.random() * 2 - 1;
-            const t = i / buffer.sampleRate;
-            const hum = 0.3 * Math.sin(2 * Math.PI * 50 * t);
-            const n = white + hum;
-            noiseTemp[i] = n;
-            pNoise += n * n;
-          }
-        } else if (type === 'highfreq') {
-          // high-frequency hiss: white noise filtered by simple high-pass shape
-          for (let i = 0; i < clean.length; i++) {
-            const white = Math.random() * 2 - 1;
-            const t = i / buffer.sampleRate;
-            const env = 0.2 + 0.8 * (i / clean.length); // more highfreq later
-            const n = white * env;
-            noiseTemp[i] = n;
-            pNoise += n * n;
-          }
-        } else {
-          // "babble-like": bursts of noise in random segments
-          const burstProb = 0.02;
-          let active = false;
-          let remaining = 0;
-          for (let i = 0; i < clean.length; i++) {
-            if (!active && Math.random() < burstProb) {
-              active = true;
-              remaining = Math.floor(buffer.sampleRate * (0.1 + Math.random() * 0.3));
-            }
-            let n = 0;
-            if (active) {
-              n = (Math.random() * 2 - 1) * 1.2;
-              remaining--;
-              if (remaining <= 0) active = false;
-            }
-            noiseTemp[i] = n;
-            pNoise += n * n;
-          }
-        }
-        pNoise /= clean.length;
-
-        // scale noise to target SNR
-        const scale = Math.sqrt(pClean / (pNoise * snrTargetLin));
-        for (let i = 0; i < clean.length; i++) {
-          noisy[i] = clean[i] + scale * noiseTemp[i];
-        }
-      }
-
-      const noisyBlob = await audioBufferToWavBlob(noisyBuffer);
-      const noisyUrl = URL.createObjectURL(noisyBlob);
-      playerNoisy.src = noisyUrl;
-      downloadLink.style.display = 'inline';
-      downloadLink.href = noisyUrl;
-
-      processBtn.textContent = 'Generate noisy version';
-      processBtn.disabled = false;
-    });
-
-    async function audioBufferToWavBlob(buffer) {
-      const numCh = buffer.numberOfChannels;
-      const sampleRate = buffer.sampleRate;
-      const numFrames = buffer.length;
-
-      const bytesPerSample = 2;
-      const blockAlign = numCh * bytesPerSample;
-      const byteRate = sampleRate * blockAlign;
-      const dataSize = numFrames * blockAlign;
-      const headerSize = 44;
-      const totalSize = headerSize + dataSize;
-
-      const arrayBuffer = new ArrayBuffer(totalSize);
-      const view = new DataView(arrayBuffer);
-      let offset = 0;
-
-      function writeString(s) {
-        for (let i = 0; i < s.length; i++) {
-          view.setUint8(offset++, s.charCodeAt(i));
-        }
-      }
-
-      // RIFF header
-      writeString('RIFF');
-      view.setUint32(offset, totalSize - 8, true); offset += 4;
-      writeString('WAVE');
-
-      // fmt chunk
-      writeString('fmt ');
-      view.setUint32(offset, 16, true); offset += 4;
-      view.setUint16(offset, 1, true); offset += 2;
-      view.setUint16(offset, numCh, true); offset += 2;
-      view.setUint32(offset, sampleRate, true); offset += 4;
-      view.setUint32(offset, byteRate, true); offset += 4;
-      view.setUint16(offset, blockAlign, true); offset += 2;
-      view.setUint16(offset, 16, true); offset += 2;
-
-      // data chunk
-      writeString('data');
-      view.setUint32(offset, dataSize, true); offset += 4;
-
-      const channels = [];
-      for (let ch = 0; ch < numCh; ch++) {
-        channels.push(buffer.getChannelData(ch));
-      }
-      for (let i = 0; i < numFrames; i++) {
-        for (let ch = 0; ch < numCh; ch++) {
-          let sample = channels[ch][i];
-          sample = Math.max(-1, Math.min(1, sample));
-          view.setInt16(offset, sample * 0x7fff, true);
-          offset += 2;
-        }
-      }
-      return new Blob([arrayBuffer], { type: 'audio/wav' });
+    } catch (err) {
+      console.error(err);
+      setStatus("Could not decode this audio file. Please try a different WAV file.", "err");
     }
-  </script>
+  });
+
+  function stopAll() {
+    currentNodes.forEach(node => {
+      try { node.stop(); } catch (e) {}
+    });
+    currentNodes = [];
+  }
+
+  // play clean only
+  playCleanBtn.addEventListener("click", () => {
+    if (!cleanBuffer || !audioCtx) return;
+    stopAll();
+
+    const src = audioCtx.createBufferSource();
+    src.buffer = cleanBuffer;
+    src.connect(audioCtx.destination);
+    src.start();
+
+    currentNodes.push(src);
+    setStatus("Playing clean speech only.", "ok");
+  });
+
+  function createNoiseBuffer(type) {
+    const channels = cleanBuffer.numberOfChannels;
+    const length = cleanBuffer.length;
+    const sr = cleanBuffer.sampleRate;
+    const noiseBuf = audioCtx.createBuffer(channels, length, sr);
+
+    for (let ch = 0; ch < channels; ch++) {
+      const data = noiseBuf.getChannelData(ch);
+      for (let i = 0; i < length; i++) {
+        // base white noise
+        let n = Math.random() * 2 - 1;
+
+        if (type === "babble") {
+          n += 0.4 * Math.sin(2 * Math.PI * 200 * i / sr + Math.random() * 2 * Math.PI);
+          n += 0.3 * Math.sin(2 * Math.PI * 400 * i / sr + Math.random() * 2 * Math.PI);
+        } else if (type === "highfreq") {
+          const phi = 2 * Math.PI * 2500 * i / sr;
+          n += 0.6 * Math.sin(phi + Math.random() * 2 * Math.PI);
+        }
+
+        data[i] = n;
+      }
+    }
+
+    return noiseBuf;
+  }
+
+  // play mixture at target SNR
+  playNoisyBtn.addEventListener("click", () => {
+    if (!cleanBuffer || !audioCtx) return;
+    stopAll();
+
+    const snrDb = parseFloat(snrSlider.value);
+    const noiseAmp = Math.pow(10, -snrDb / 20);
+
+    const cleanSrc = audioCtx.createBufferSource();
+    cleanSrc.buffer = cleanBuffer;
+
+    const noiseBuf = createNoiseBuffer(currentNoiseType);
+    const noiseSrc = audioCtx.createBufferSource();
+    noiseSrc.buffer = noiseBuf;
+
+    const cleanGain = audioCtx.createGain();
+    cleanGain.gain.value = 1.0;
+
+    const noiseGain = audioCtx.createGain();
+    noiseGain.gain.value = noiseAmp;
+
+    cleanSrc.connect(cleanGain).connect(audioCtx.destination);
+    noiseSrc.connect(noiseGain).connect(audioCtx.destination);
+
+    cleanSrc.start();
+    noiseSrc.start();
+
+    currentNodes.push(cleanSrc, noiseSrc);
+    setStatus(
+      `Playing synthetic mixture (noise: ${currentNoiseType}, target SNR ≈ ${snrDb} dB).`,
+      "ok"
+    );
+  });
+
+  stopBtn.addEventListener("click", () => {
+    stopAll();
+    setStatus("Playback stopped.", "warn");
+  });
+</script>
 </body>
 </html>
