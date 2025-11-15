@@ -1,38 +1,51 @@
-# ELEC5305 Project – Adaptive Hybrid Speech Denoising
+# ELEC5305 – Adaptive Hybrid Speech Denoising
 
-**Author:** Tengfei Wang (540542743)  
-**Unit:** ELEC5305 – Audio Signal Processing, University of Sydney  
+> Classical speech enhancement in MATLAB with an adaptive hybrid denoiser.  
+> Unit: **ELEC5305 – Audio Signal Processing**, The University of Sydney  
+> Author: **Tengfei Wang (540542743)**
 
----## Example 1 – OSR\_us\_000\_0031\_8k (clean English speech)
+---
 
-**Input (clean speech):**
+## 🔗 Quick Links
 
-- [`input_OSR_us_000_0031_8k.wav`](examples/osr_0031/input_OSR_us_000_0031_8k.wav)
+- 📝 **Project report (PDF)**: [`5305 project.pdf`](./5305%20project.pdf)
+- 🎧 **Fixed example (OSR_us_000_0031_8k)**: [`examples/osr_0031`](./examples/osr_0031)
+- 🎬 **Demo video**: [`results/demo_denoising.mp4`](./results/demo_denoising.mp4)
 
-**Noisy and denoised outputs:**
+---
 
-- [`noisy.wav`](examples/osr_0031/noisy.wav)
-- [`wiener.wav`](examples/osr_0031/wiener.wav)
-- [`spectral.wav`](examples/osr_0031/spectral.wav)
-- [`hybrid.wav`](examples/osr_0031/hybrid.wav)
+## 🌟 Example: OSR_us_000_0031_8k
 
-**Waveform comparison:**
+This repository includes a complete “before/after” example using a real English speech recording from the Open Speech Repository.
 
-![Waveform comparison](examples/osr_0031/comparison_waveforms.png)
+**Input clean speech**
 
-**Quick listening (in browsers that support HTML audio):**
+- [`examples/osr_0031/input_OSR_us_000_0031_8k.wav`](./examples/osr_0031/input_OSR_us_000_0031_8k.wav)
 
-<audio controls src="examples/osr_0031/noisy.wav"></audio> Noisy  
-<audio controls src="examples/osr_0031/hybrid.wav"></audio> Hybrid
+**Noisy and denoised outputs**
 
-> The hybrid method audibly reduces background noise while preserving the speech structure more clearly than the baselines.
+- [`examples/osr_0031/noisy.wav`](./examples/osr_0031/noisy.wav)  
+- [`examples/osr_0031/wiener.wav`](./examples/osr_0031/wiener.wav)  
+- [`examples/osr_0031/spectral.wav`](./examples/osr_0031/spectral.wav)  
+- [`examples/osr_0031/hybrid.wav`](./examples/osr_0031/hybrid.wav)
 
+**Waveform comparison**
+
+- [`examples/osr_0031/comparison_waveforms.png`](./examples/osr_0031/comparison_waveforms.png)
+
+> Listening impression: the **hybrid** method audibly reduces background noise while preserving the structure of the speech more naturally than either Wiener or spectral subtraction alone.
+
+---
 
 ## 1. Project Overview
 
-This project implements and evaluates several **classical speech enhancement methods** in MATLAB and proposes an **adaptive hybrid denoiser** that combines their strengths.
+This project implements and evaluates several **classical speech enhancement** methods in MATLAB, and proposes an **adaptive hybrid** denoiser that combines their strengths.
 
-The goal is to reduce additive noise in real speech recordings (e.g. OSR open speech corpus) while preserving perceptual quality and intelligibility, using only traditional signal processing techniques (no deep learning, no pre-trained models).
+The goal is to reduce additive noise in real speech recordings (e.g. OSR open speech corpus) while preserving **perceptual quality** and **intelligibility**, using only traditional signal processing techniques:
+
+- No deep learning
+- No pre-trained models
+- Fully transparent and reproducible algorithms
 
 ### Implemented methods
 
@@ -43,11 +56,11 @@ The goal is to reduce additive noise in real speech recordings (e.g. OSR open sp
    Classical magnitude-domain spectral subtraction with noise tracking and spectral flooring.
 
 3. **Proposed adaptive hybrid filter**  
-   A *noise-adaptive* combination of Wiener and spectral subtraction, where the time–frequency weighting is controlled by an estimated SNR and noise statistics.  
-   - At low SNR or strong noise, the filter leans towards Wiener behaviour.  
-   - At higher SNR or stable regions, it behaves more like spectral subtraction to better preserve speech harmonics.
+   A noise-adaptive combination of Wiener and spectral subtraction, where the frame-wise weighting is controlled by an estimated SNR.  
+   - At **low SNR** or strong noise → behaves more like Wiener.  
+   - At **higher SNR** or stable regions → behaves closer to spectral subtraction to better preserve speech harmonics.
 
-All implementations are **pure MATLAB code** without requiring additional toolboxes.
+All implementations are pure MATLAB code and do not require deep learning toolboxes.
 
 ---
 
@@ -57,8 +70,15 @@ All implementations are **pure MATLAB code** without requiring additional toolbo
 elec5305-project-TengfeiWang-540542743/
   data/                      # input clean speech files (e.g. OSR_us_000_0031_8k.wav)
   results/                   # demo outputs, figures, audio, experiment CSV
+    comparison_waveforms.png
+    exp_whitehum_snr_improvement.png
+    exp_highfreq_snr_improvement.png
+    exp_babble_snr_improvement.png
+    demo_denoising.mp4
+    experiment_results.csv
+
   examples/
-    osr_0031/                # fixed example for GitHub (see Section 5)
+    osr_0031/                # fixed example for GitHub (see section "Example")
       input_OSR_us_000_0031_8k.wav
       noisy.wav
       wiener.wav
@@ -83,7 +103,10 @@ elec5305-project-TengfeiWang-540542743/
   plot_experiment_results.m
   play_audio_demo.m
 
+  % documentation
+  5305 project.pdf           # full written report
   README.md
+
 
 
 
