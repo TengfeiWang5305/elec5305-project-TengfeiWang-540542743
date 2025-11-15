@@ -33,32 +33,23 @@ This repository includes a complete “before/after” example using a real Engl
 
 - [`examples/osr_0031/comparison_waveforms.png`](./examples/osr_0031/comparison_waveforms.png)
 
-> Listening impression: the **hybrid** method audibly reduces background noise while preserving the structure of the speech more naturally than either Wiener or spectral subtraction alone.
-
 ---
 
 ## 1. Project Overview
 
-This project implements and evaluates several **classical speech enhancement** methods in MATLAB, and proposes an **adaptive hybrid** denoiser that combines their strengths.
+This project implements several **classical speech enhancement** methods in MATLAB and proposes an **adaptive hybrid** denoiser that combines their strengths.
 
 The goal is to reduce additive noise in real speech recordings (e.g. OSR open speech corpus) while preserving **perceptual quality** and **intelligibility**, using only traditional signal processing techniques:
 
-- No deep learning
-- No pre-trained models
+- No deep learning  
+- No pre-trained models  
 - Fully transparent and reproducible algorithms
 
-### Implemented methods
+Implemented methods:
 
-1. **Wiener filter**  
-   STFT-based Wiener filtering with noise power estimation from initial noise-dominated frames.
-
-2. **Spectral subtraction**  
-   Classical magnitude-domain spectral subtraction with noise tracking and spectral flooring.
-
-3. **Proposed adaptive hybrid filter**  
-   A noise-adaptive combination of Wiener and spectral subtraction, where the frame-wise weighting is controlled by an estimated SNR.  
-   - At **low SNR** or strong noise → behaves more like Wiener.  
-   - At **higher SNR** or stable regions → behaves closer to spectral subtraction to better preserve speech harmonics.
+- **Wiener filter** – STFT-based Wiener filtering with noise power estimation.  
+- **Spectral subtraction** – magnitude-domain subtraction with spectral flooring.  
+- **Adaptive hybrid filter** – frame-wise logistic weighting between Wiener and spectral subtraction based on an SNR estimate.
 
 All implementations are pure MATLAB code and do not require deep learning toolboxes.
 
@@ -78,7 +69,7 @@ elec5305-project-TengfeiWang-540542743/
     experiment_results.csv
 
   examples/
-    osr_0031/                # fixed example for GitHub (see section "Example")
+    osr_0031/                # fixed example for GitHub demo
       input_OSR_us_000_0031_8k.wav
       noisy.wav
       wiener.wav
@@ -104,12 +95,17 @@ elec5305-project-TengfeiWang-540542743/
   play_audio_demo.m
 
   % documentation
-  5305 project.pdf           # full written report
+  5305 project.pdf
   README.md
-
 Clean Speech  →  Noise Generation  →  STFT Analysis
              →  Wiener / Spectral / Hybrid Denoising
-             →  SNR Evaluation  →  Plots + Audio + Demo Video
+             →  SNR Evaluation     →  Plots + Audio + Demo Video
+git clone https://github.com/TengfeiWang5305/elec5305-project-TengfeiWang-540542743.git
+cd elec5305-project-TengfeiWang-540542743
+main_hybrid_denoise
+run_batch_experiments
+plot_experiment_results
+
 
 
 
