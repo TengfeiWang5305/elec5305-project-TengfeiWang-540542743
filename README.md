@@ -107,6 +107,9 @@ elec5305-project-TengfeiWang-540542743/
   5305 project.pdf           # full written report
   README.md
 
+Clean Speech  →  Noise Generation  →  STFT Analysis
+             →  Wiener / Spectral / Hybrid Denoising
+             →  SNR Evaluation  →  Plots + Audio + Demo Video
 
 
 
