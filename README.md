@@ -241,6 +241,10 @@ In MATLAB:
 
 This video provides a quick, visual explanation of how noise is suppressed
 while speech segments are preserved.
+> Note: The GitHub Pages demo is fully client-side and does not run MATLAB in the browser.
+> All denoised examples and evaluation plots are generated offline in MATLAB and then
+> served as static audio/image files. The web playground implements only interactive
+> noise synthesis to illustrate how input SNR and noise type affect speech quality.
 
 ---
 
