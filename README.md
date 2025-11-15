@@ -1,6 +1,6 @@
 # ELEC5305 – Adaptive Hybrid Speech Denoising
 
-> Classical speech enhancement in MATLAB with an adaptive hybrid denoiser.  
+> Classical speech enhancement in MATLAB with an adaptive hybrid denoiser  
 > Unit: **ELEC5305 – Audio Signal Processing**, The University of Sydney  
 > Author: **Tengfei Wang (540542743)**
 
@@ -8,54 +8,69 @@
 
 ## 🔗 Quick Links
 
-- 📝 **Project report (PDF)**: `5305 project.pdf`
-- 🎧 **Fixed example (OSR_us_000_0031_8k)**: `examples/osr_0031/`
-- 🎬 **Demo video**: `results/demo_denoising.mp4`
+- 📄 **Project report (PDF)** – `5305 project.pdf`
+- 💻 **Main script** – `main_hybrid_denoise.m`
+- 📁 **Example speech** – `data/OSR_us_000_0031_8k.wav`
+- 📂 **Fixed example outputs** – `examples/osr_0031/`
+- 🎧 **Demo audio & video** – `results/`
 
 ---
 
 ## 🌟 Example: OSR_us_000_0031_8k
 
-This repository includes a complete “before/after” example using a real English speech recording from the Open Speech Repository.
+The repository includes a complete “clean → noisy → denoised” pipeline on the
+Open Speech Repository sentence **OSR_us_000_0031_8k.wav**.
 
-**Input clean speech**
+**Waveform comparison (clean, noisy, three methods)**
 
-- `examples/osr_0031/input_OSR_us_000_0031_8k.wav`
+![Waveform comparison](results/comparison_waveforms.png)
 
-**Noisy and denoised outputs**
-
-- `examples/osr_0031/noisy.wav`  
-- `examples/osr_0031/wiener.wav`  
-- `examples/osr_0031/spectral.wav`  
-- `examples/osr_0031/hybrid.wav`
-
-**Waveform comparison**
-
-- `examples/osr_0031/comparison_waveforms.png`
+The plot shows how Wiener filtering, spectral subtraction and the proposed
+adaptive hybrid method behave on the same noisy mixture.
 
 ---
 
 ## 1. Project Overview
 
-This project implements several classical speech enhancement methods in MATLAB and proposes an adaptive hybrid denoiser that combines their strengths.
+This project studies classical **single-channel speech enhancement** and
+implements three methods in MATLAB:
 
-The goal is to reduce additive noise in real speech recordings (e.g., OSR open speech corpus) while preserving perceptual quality and intelligibility, using only traditional signal processing techniques:
+1. **Wiener filtering** in the STFT domain.  
+2. **Spectral subtraction** with simple noise tracking.  
+3. **Adaptive hybrid denoiser**, which chooses between 1 and 2 using a
+   frame-wise SNR indicator.
 
-- no deep learning  
-- no pre-trained models  
-- fully transparent and reproducible algorithms
+The aim is to reduce additive background noise while keeping speech natural and
+intelligible. No deep learning or external models are required, so all results
+are fully reproducible on a standard MATLAB installation.
 
-Implemented methods:
+Typical use cases:
 
-- **Wiener filter** – STFT-based Wiener filtering with noise power estimation from initial noise-dominated frames.  
-- **Spectral subtraction** – magnitude-domain subtraction with noise tracking and spectral flooring.  
-- **Adaptive hybrid filter** – frame-wise logistic weighting between Wiener and spectral subtraction based on an SNR estimate.
-
-All implementations are pure MATLAB code and do not require deep learning toolboxes.
+- understanding how traditional enhancement algorithms work;
+- generating baseline results for comparison with modern neural models;
+- producing teaching examples for spectrograms, SNR evaluation and subjective
+  listening tests.
 
 ---
 
-## 2. File Structure
+## 2. Key Features
+
+- ✅ **Pure MATLAB implementation** – no toolboxes beyond standard signal
+  processing functions.
+- ✅ **Real speech recordings** – experiments use open English speech (OSR) at
+  8 kHz.
+- ✅ **Multiple noise types** – white + 50 Hz hum (“whitehum”), high-frequency
+  hiss, and multi-speaker babble.
+- ✅ **Controlled input SNR** – mixtures are created at 0 / 5 / 10 / 15 dB.
+- ✅ **Batch experiments** – automatic sweep over noise types and SNR levels.
+- ✅ **Rich visualisation** – time-waveforms, spectrograms and bar plots of SNR
+  improvement.
+- ✅ **Audio + video demos** – WAV files for each method and a short MP4
+  denoising video.
+
+---
+
+## 3. Repository Structure
 
     elec5305-project-TengfeiWang-540542743/
       data/                      # input clean speech files (e.g. OSR_us_000_0031_8k.wav)
@@ -68,7 +83,7 @@ All implementations are pure MATLAB code and do not require deep learning toolbo
         experiment_results.csv
 
       examples/
-        osr_0031/                # fixed example for GitHub demo
+        osr_0031/                # fixed GitHub example (same sentence as in the report)
           input_OSR_us_000_0031_8k.wav
           noisy.wav
           wiener.wav
@@ -99,72 +114,136 @@ All implementations are pure MATLAB code and do not require deep learning toolbo
 
 ---
 
-## 3. System Flow
+## 4. Quick Start (Single Experiment)
 
-    Clean Speech  →  Noise Generation  →  STFT Analysis
-                 →  Wiener / Spectral / Hybrid Denoising
-                 →  SNR Evaluation     →  Plots + Audio + Demo Video
+1. **Clone the repository**
 
----
+       git clone https://github.com/TengfeiWang5305/elec5305-project-TengfeiWang-540542743.git
+       cd elec5305-project-TengfeiWang-540542743
 
-## 4. How to Run (Single Experiment)
+2. **Open MATLAB** and set the current folder to the repository root.
 
-    # 1. Clone the repository
-    git clone https://github.com/TengfeiWang5305/elec5305-project-TengfeiWang-540542743.git
-    cd elec5305-project-TengfeiWang-540542743
+3. **Run the main script**
 
-In MATLAB:
+       main_hybrid_denoise
 
-    % 2. Set current folder to the repo root
-    % 3. Run the main script
-    main_hybrid_denoise
+   This script will
 
-This will:
+   - load a speech file from `data/` (or generate synthetic speech);
+   - add one or more noise types (`whitehum`, `highfreq`, `babble`);
+   - run Wiener, spectral subtraction and the adaptive hybrid method;
+   - compute SNR values for each output;
+   - save all audio and figures into `results/`.
 
-- load a speech file from `data/` (or generate synthetic speech)  
-- add noise (`whitehum` / `highfreq` / `babble`)  
-- run Wiener, spectral subtraction and hybrid denoising  
-- compute SNR and print a summary  
-- save audio + figures into `results/`
+4. **Listen to the outputs**
 
----
-
-## 5. Batch Experiments and Plots
-
-In MATLAB:
-
-    % Run all combinations of speech files, noise types and input SNRs
-    run_batch_experiments
-
-    % Generate bar plots of SNR improvement for each noise type
-    plot_experiment_results
-
-Outputs:
-
-- `results/experiment_results.csv`  
-- `results/exp_whitehum_snr_improvement.png`  
-- `results/exp_highfreq_snr_improvement.png`  
-- `results/exp_babble_snr_improvement.png`
+   - `results/original.wav`  
+   - `results/noisy.wav`  
+   - `results/wiener_denoised.wav`  
+   - `results/spectral_denoised.wav`  
+   - `results/hybrid_denoised.wav`
 
 ---
 
-## 6. Demo Video
+## 5. Example Results
+
+### 5.1 Time-domain comparison
+
+The following figure (generated by `main_hybrid_denoise.m`) shows clean speech,
+noisy mixture and all three enhancement methods for a 30-second OSR sentence:
+
+![Waveforms – clean vs noisy vs denoised](results/comparison_waveforms.png)
+
+### 5.2 SNR improvement vs input SNR
+
+Average SNR improvement across several speech files is summarised below for
+three noise types. These plots are produced by `plot_experiment_results.m`.
+
+**White + hum noise (“whitehum”)**
+
+![SNR improvement – whitehum noise](results/exp_whitehum_snr_improvement.png)
+
+**High-frequency noise**
+
+![SNR improvement – highfreq noise](results/exp_highfreq_snr_improvement.png)
+
+**Babble noise**
+
+![SNR improvement – babble noise](results/exp_babble_snr_improvement.png)
+
+Interpretation (short):
+
+- spectral subtraction provides the largest SNR gain in most conditions;
+- Wiener filtering is slightly more conservative but still robust;
+- the hybrid method trades some raw SNR gain for smoother, less musical
+  artefacts, which is often preferred perceptually.
+
+---
+
+## 6. Batch Experiments & Reproducibility
+
+To reproduce the quantitative plots in the report:
+
+1. **Run batch experiments**
+
+       % in MATLAB
+       run_batch_experiments
+
+   This script loops over
+
+   - multiple clean speech files in `data/`,
+   - the noise types `whitehum`, `highfreq`, `babble`,
+   - input SNR levels `0, 5, 10, 15 dB`.
+
+   All results are stored in `results/experiment_results.csv`.
+
+2. **Generate figures**
+
+       plot_experiment_results
+
+   This reads the CSV file and produces the three bar plots embedded above:
+
+   - `results/exp_whitehum_snr_improvement.png`
+   - `results/exp_highfreq_snr_improvement.png`
+   - `results/exp_babble_snr_improvement.png`
+
+These scripts make it easy to extend the project: new noise types or new
+algorithms can be added and evaluated by following the same interface.
+
+---
+
+## 7. Audio & Video Demos
+
+### 7.1 Audio comparison
+
+The folder `examples/osr_0031/` contains a ready-to-use audio example:
+
+- `input_OSR_us_000_0031_8k.wav` – original clean speech  
+- `noisy.wav` – mixture with additive noise  
+- `wiener.wav` – Wiener-filtered output  
+- `spectral.wav` – spectral subtraction output  
+- `hybrid.wav` – adaptive hybrid output  
+
+Import these files into any audio editor or DAW to perform AB listening tests.
+
+### 7.2 Denoising video
+
+The script `generate_demo_video.m` creates a short MP4 video that visualises
+the noisy vs denoised waveform over time:
+
+- Output file: `results/demo_denoising.mp4`  
+- Can be embedded in slides or played directly from the browser.
 
 In MATLAB:
 
-    % Example workflow for generating the demo video
-
-    % Step 1: run a single experiment (e.g. OSR + whitehum noise)
-    main_hybrid_denoise
-
-    % Step 2: create a simple time-domain comparison video
+    % after running main_hybrid_denoise once
     generate_demo_video
 
-The video will be saved as:
-
-- `results/demo_denoising.mp4`
+This video provides a quick, visual explanation of how noise is suppressed
+while speech segments are preserved.
 
 ---
+
 
 
 
